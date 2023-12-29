@@ -2,84 +2,85 @@
 -- GO
 -- USE coffee_company;
 
+
 CREATE TABLE Manager(
-    Manager_ID          INTEGER      NOT NULL,
-    First_Name          VARCHAR(20)  NOT NULL,
-    Last_Name           VARCHAR(20)  NOT NULL,
-    Phone               VARCHAR(15)  NOT NULL,
-    CONSTRAINT Manager_PK PRIMARY KEY (Manager_ID)
+                        Manager_ID          INTEGER      NOT NULL,
+                        First_Name          VARCHAR(20)  NOT NULL,
+                        Last_Name           VARCHAR(20)  NOT NULL,
+                        Phone               VARCHAR(15)  NOT NULL,
+                        CONSTRAINT Manager_PK PRIMARY KEY (Manager_ID)
 )
 ;
 
 CREATE TABLE Coffee_Sort(
-    Coffee_Sort_ID      INTEGER      NOT NULL,
-    Name                VARCHAR(20)  NOT NULL,
-    Price_Per_Kg        INTEGER      NOT NULL,
-    CONSTRAINT Coffee_Sort_PK PRIMARY KEY (Coffee_Sort_ID)
+                            Coffee_Sort_ID      INTEGER      NOT NULL,
+                            Name                VARCHAR(20)  NOT NULL,
+                            Price_Per_Kg        INTEGER      NOT NULL,
+                            CONSTRAINT Coffee_Sort_PK PRIMARY KEY (Coffee_Sort_ID)
 )
 ;
 
 CREATE TABLE Plantation(
-    Plantation_ID       INTEGER      NOT NULL,
-    Name                VARCHAR(50)  NOT NULL,
-    Address             VARCHAR(50)  NOT NULL,
-    Manager_ID          INTEGER      NOT NULL,
-    Coffee_Sort_ID      INTEGER      NOT NULL,
-    CONSTRAINT Plantation_PK PRIMARY KEY (Plantation_ID),
-    CONSTRAINT Plantation_FK_Manager FOREIGN KEY (Manager_ID) REFERENCES Manager (Manager_ID) ON DELETE CASCADE,
-    CONSTRAINT Plantation_FK_Coffee_Sort FOREIGN KEY (Coffee_Sort_ID) REFERENCES Coffee_Sort (Coffee_Sort_ID) ON DELETE CASCADE,
-    CONSTRAINT Plantation_UQ_Name UNIQUE (Name)
+                           Plantation_ID       INTEGER      NOT NULL,
+                           Name                VARCHAR(50)  NOT NULL,
+                           Address             VARCHAR(50)  NOT NULL,
+                           Manager_ID          INTEGER      NOT NULL,
+                           Coffee_Sort_ID      INTEGER      NOT NULL,
+                           CONSTRAINT Plantation_PK PRIMARY KEY (Plantation_ID),
+                           CONSTRAINT Plantation_FK_Manager FOREIGN KEY (Manager_ID) REFERENCES Manager (Manager_ID) ON DELETE CASCADE,
+                           CONSTRAINT Plantation_FK_Coffee_Sort FOREIGN KEY (Coffee_Sort_ID) REFERENCES Coffee_Sort (Coffee_Sort_ID) ON DELETE CASCADE,
+                           CONSTRAINT Plantation_UQ_Name UNIQUE (Name)
 )
 ;
 
 CREATE TABLE Batch(
-    Batch_ID            INTEGER         NOT NULL,
-    Plantation_ID       INTEGER         NOT NULL,
-    Amount_Kg           INTEGER         NOT NULL,
-    Total_Price         INTEGER         NOT NULL,
-    CONSTRAINT Batch_PK PRIMARY KEY (Batch_ID),
-    CONSTRAINT Batch_FK_Plantation FOREIGN KEY (Plantation_ID) REFERENCES Plantation (Plantation_ID) ON DELETE CASCADE,
-    CONSTRAINT Batch_CHK_Amount_Kg CHECK (Amount_Kg > 0)
+                      Batch_ID            INTEGER         NOT NULL,
+                      Plantation_ID       INTEGER         NOT NULL,
+                      Amount_Kg           INTEGER         NOT NULL,
+                      Total_Price         INTEGER         NOT NULL,
+                      CONSTRAINT Batch_PK PRIMARY KEY (Batch_ID),
+                      CONSTRAINT Batch_FK_Plantation FOREIGN KEY (Plantation_ID) REFERENCES Plantation (Plantation_ID) ON DELETE CASCADE,
+                      CONSTRAINT Batch_CHK_Amount_Kg CHECK (Amount_Kg > 0)
 )
 ;
 
 CREATE TABLE Port(
-    Port_ID             INTEGER      NOT NULL,
-    Country             VARCHAR(20)  NOT NULL,
-    City                VARCHAR(20)  NOT NULL,
-    Name                VARCHAR(20)  NOT NULL,
-    CONSTRAINT Port_PK PRIMARY KEY (Port_ID),
-    CONSTRAINT Port_UQ_Country_City UNIQUE (Country, City)
+                     Port_ID             INTEGER      NOT NULL,
+                     Country             VARCHAR(20)  NOT NULL,
+                     City                VARCHAR(20)  NOT NULL,
+                     Name                VARCHAR(20)  NOT NULL,
+                     CONSTRAINT Port_PK PRIMARY KEY (Port_ID),
+                     CONSTRAINT Port_UQ_Country_City UNIQUE (Country, City)
 )
 ;
 
 CREATE TABLE Customer(
-    Customer_ID         INTEGER      NOT NULL,
-    Name                VARCHAR(20)  NOT NULL,
-    CONSTRAINT Customer_PK PRIMARY KEY (Customer_ID),
-    CONSTRAINT Customer_UQ_Name UNIQUE (Name)
+                         Customer_ID         INTEGER      NOT NULL,
+                         Name                VARCHAR(20)  NOT NULL,
+                         CONSTRAINT Customer_PK PRIMARY KEY (Customer_ID),
+                         CONSTRAINT Customer_UQ_Name UNIQUE (Name)
 )
 ;
 
 CREATE TABLE Order_Status(
-    Order_Status_ID     INTEGER      NOT NULL,
-    Name                VARCHAR(20)  NOT NULL,
-    CONSTRAINT Order_Status_PK PRIMARY KEY (Order_Status_ID),
-    CONSTRAINT Order_Status_UQ_Name UNIQUE (Name)
+                             Order_Status_ID     INTEGER      NOT NULL,
+                             Name                VARCHAR(20)  NOT NULL,
+                             CONSTRAINT Order_Status_PK PRIMARY KEY (Order_Status_ID),
+                             CONSTRAINT Order_Status_UQ_Name UNIQUE (Name)
 )
 ;
 
 CREATE TABLE Coffee_Order(
-    Coffee_Order_ID     INTEGER      NOT NULL,
-    Customer_ID         INTEGER      NOT NULL,
-    Batch_ID            INTEGER         NOT NULL,
-    Port_ID             INTEGER      NOT NULL,
-    Order_Status_ID     INTEGER      NOT NULL,
-    CONSTRAINT Coffee_Order_PK PRIMARY KEY (Coffee_Order_ID),
-    CONSTRAINT Coffee_Order_FK_Customer FOREIGN KEY (Customer_ID) REFERENCES Customer (Customer_ID) ON DELETE CASCADE,
-    CONSTRAINT Coffee_Order_FK_Batch FOREIGN KEY (Batch_ID) REFERENCES Batch (Batch_ID) ON DELETE CASCADE,
-    CONSTRAINT Coffee_Order_FK_Port FOREIGN KEY (Port_ID) REFERENCES Port (Port_ID) ON DELETE CASCADE,
-    CONSTRAINT Coffee_Order_FK_Order_Status FOREIGN KEY (Order_Status_ID) REFERENCES Order_Status (Order_Status_ID) ON DELETE CASCADE
+                             Coffee_Order_ID     INTEGER      NOT NULL,
+                             Customer_ID         INTEGER      NOT NULL,
+                             Batch_ID            INTEGER         NOT NULL,
+                             Port_ID             INTEGER      NOT NULL,
+                             Order_Status_ID     INTEGER,
+                             CONSTRAINT Coffee_Order_PK PRIMARY KEY (Coffee_Order_ID),
+                             CONSTRAINT Coffee_Order_FK_Customer FOREIGN KEY (Customer_ID) REFERENCES Customer (Customer_ID) ON DELETE CASCADE,
+                             CONSTRAINT Coffee_Order_FK_Batch FOREIGN KEY (Batch_ID) REFERENCES Batch (Batch_ID) ON DELETE CASCADE,
+                             CONSTRAINT Coffee_Order_FK_Port FOREIGN KEY (Port_ID) REFERENCES Port (Port_ID) ON DELETE CASCADE,
+                             CONSTRAINT Coffee_Order_FK_Order_Status FOREIGN KEY (Order_Status_ID) REFERENCES Order_Status (Order_Status_ID) ON DELETE CASCADE
 )
 ;
 
@@ -96,6 +97,7 @@ VALUES
     (6, 'Emily', 'Taylor', '333333333'),
     (7, 'Michael', 'Anderson', '444444444');
 
+
 -- Заполнение таблицы Coffee_Sort
 INSERT INTO Coffee_Sort (Coffee_Sort_ID, Name, Price_Per_Kg)
 VALUES
@@ -107,13 +109,14 @@ VALUES
     (6, 'Typica', 13),
     (7, 'Bourbon', 14);
 
+
 -- Заполнение таблицы Plantation
 INSERT INTO Plantation (Plantation_ID, Name, Address, Manager_ID, Coffee_Sort_ID)
 VALUES
     (1, 'Finca El Injerto', '123 Main Street', 1, 1),
     (2, 'Hacienda La Esmeralda', '456 Elm Street', 2, 2),
     (3, 'Fazenda Santa Alina', '789 Oak Street', 3, 1),
-    (5, 'Fazelina', '786 Oak Street', NULL, 1),
+    (5, 'Fazelina', '786 Oak Street', 5, 1),
     (4, 'Finca El Puente', '321 Pine Street', 4, 3);
 
 -- Заполнение таблицы Batch
@@ -144,13 +147,11 @@ VALUES
 -- Заполнение таблицы Order_Status
 INSERT INTO Order_Status (Order_Status_ID, Name)
 VALUES
-    (1, 'Pending'),
+    (1, 'New'),
     (2, 'Processing'),
     (3, 'Completed'),
     (4, 'Cancelled'),
-    (5, 'On Hold'),
-    (6, 'Shipped'),
-    (7, 'Delivered');
+    (5, 'On Hold');
 
 -- Заполнение таблицы Coffee_Order
 INSERT INTO Coffee_Order (Coffee_Order_ID, Customer_ID, Batch_ID, Port_ID, Order_Status_ID)
@@ -174,7 +175,7 @@ SELECT Name FROM Port
 );
 
 
---2. Посчитать общее количество кофе в каждой партии:
+--2. Посчитать общее количество килограмм кофе в каждой партии:
 SELECT Batch_ID, SUM(Amount_Kg) AS Total_Amount
     FROM Batch
         GROUP BY Batch_ID;
@@ -211,11 +212,11 @@ SELECT * FROM Batch
     WHERE Amount_Kg > 100
     AND Total_Price / Amount_Kg < 12;
 
---7. Вывести информацию о плантациях, у которых нет управляющего:
+--7. Вывести информацию о плантациях, у которых управляющего зовут David:
 SELECT p.Name AS Plantation_Name, p.Address
     FROM Plantation p
         LEFT JOIN Manager m ON p.Manager_ID = m.Manager_ID
-            WHERE m.Manager_ID IS NULL;
+            WHERE m.First_Name = 'David';
 
 
 --8. Вывести количество партий кофе для каждого порта:
