@@ -1,4 +1,5 @@
-CREATE OR REPLACE FUNCTION update_batch_total_price()
+-- Триггер на обновление цены кофе:
+CREATE OR REPLACE FUNCTION UpdateBatchTotalPrice()
 RETURNS TRIGGER AS
 $$
 BEGIN
@@ -10,13 +11,12 @@ END;
 $$
 LANGUAGE plpgsql;
 
--- Триггер на обновление цены кофе:
-CREATE TRIGGER after_update_coffee_price
+CREATE TRIGGER Tr_After_Update_Coffee_Price
 AFTER UPDATE OF Price_Per_Kg ON Coffee_Sort
 FOR EACH ROW
-EXECUTE FUNCTION update_batch_total_price();
+EXECUTE FUNCTION UpdateBatchTotalPrice();
 
-/*
+-- Пример работы:
 SELECT * FROM batch
     JOIN plantation ON batch.plantation_id = plantation.plantation_id
     JOIN coffee_sort ON plantation.coffee_sort_id = coffee_sort.coffee_sort_id
@@ -30,10 +30,10 @@ SELECT * FROM batch
     JOIN plantation ON batch.plantation_id = plantation.plantation_id
     JOIN coffee_sort ON plantation.coffee_sort_id = coffee_sort.coffee_sort_id
         WHERE coffee_sort.coffee_sort_id = 1;
-*/
 
 
-CREATE OR REPLACE FUNCTION delete_related_orders()
+-- Триггер на удаление клиента, удаляющий также соответствующие заказы
+CREATE OR REPLACE FUNCTION DeleteRelatedOrders()
 RETURNS TRIGGER AS
 $$
 BEGIN
@@ -44,23 +44,22 @@ END;
 $$
 LANGUAGE plpgsql;
 
--- Триггер на удаление клиента
-CREATE TRIGGER after_delete_customer
+CREATE TRIGGER Tr_After_Delete_Customer
 AFTER DELETE ON Customer
 FOR EACH ROW
-EXECUTE FUNCTION delete_related_orders();
+EXECUTE FUNCTION DeleteRelatedOrders();
 
-/*
+-- Пример работы:
 SELECT count(*) from coffee_order;
 
 DELETE FROM Customer
 WHERE Customer_ID = 1;
 
 SELECT count(*) from coffee_order;
-*/
 
 
-CREATE OR REPLACE FUNCTION assign_initial_order_status()
+-- Триггер присвоения статуса заказа по умолчанию при создании заказа
+CREATE OR REPLACE FUNCTION AssignInitialOrderStatus()
 RETURNS TRIGGER AS
 $$
 BEGIN
@@ -69,18 +68,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Триггер присвоения статуса заказа по умолчанию при создании заказа
-CREATE TRIGGER trigger_assign_initial_order_status
+CREATE TRIGGER Tr_Assign_Initial_Order_Status
 BEFORE INSERT ON Coffee_Order
 FOR EACH ROW
-EXECUTE FUNCTION assign_initial_order_status();
+EXECUTE FUNCTION AssignInitialOrderStatus();
 
-/*
+-- Пример работы
 SELECT coffee_order.order_status_id from coffee_order;
 
 INSERT INTO Coffee_Order (Coffee_Order_ID, Customer_ID, Batch_ID, Port_ID, Order_Status_ID)
 VALUES (5, 2, 3, 4, NULL);
 
 SELECT coffee_order_id, order_status_id from coffee_order;
-*/
-

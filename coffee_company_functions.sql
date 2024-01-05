@@ -1,5 +1,5 @@
 -- Функция для получения информации об управляющем по id плантации
-CREATE OR REPLACE FUNCTION get_manager_info(plant_id INTEGER)
+CREATE OR REPLACE FUNCTION GetManagerInfo(plant_id INTEGER)
 RETURNS TABLE(manager_id INTEGER, first_name VARCHAR, last_name VARCHAR, phone VARCHAR) AS
 $$
 BEGIN
@@ -12,11 +12,14 @@ END;
 $$
 LANGUAGE plpgsql;
 
--- SELECT * FROM get_manager_info(1);
+-- Пример вызова функции:
+SELECT * FROM GetManagerInfo(1);
+
+DROP FUNCTION GetManagerInfo(plant_id INTEGER);
 
 
--- Функция для проверки количества партий, принадлежащих конкретной плантации
-CREATE OR REPLACE FUNCTION get_plantation_batch_count(plant_id INT)
+-- Функция для подсчета количества партий, принадлежащих конкретной плантации
+CREATE OR REPLACE FUNCTION GetPlantationBatchCount(plant_id INT)
 RETURNS INT AS
 $$
 DECLARE
@@ -28,10 +31,14 @@ END;
 $$
 LANGUAGE plpgsql;
 
--- SELECT get_plantation_batch_count(1) AS batch_count;
+-- Пример вызова функции:
+SELECT GetPlantationBatchCount(1) AS batch_count;
+
+DROP FUNCTION GetPlantationBatchCount(plant_id INT);
+
 
 -- Функция для проверки статуса заказа по id
-CREATE OR REPLACE FUNCTION get_order_status(order_id INT)
+CREATE OR REPLACE FUNCTION GetOrderStatus(order_id INT)
 RETURNS VARCHAR(20) AS $$
 DECLARE
     status_name VARCHAR(20);
@@ -44,4 +51,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- SELECT get_order_status(1) AS status;
+-- Пример вызова функции:
+SELECT GetOrderStatus(2) AS status;
+
+DROP FUNCTION GetOrderStatus(order_id INT);

@@ -162,7 +162,7 @@ VALUES
     (4, 4, 4, 1, 4);
 
 
---1. Вывести список портов, в которые были доставлены партии кофе с ценой выше средней цены всех партий:
+-- 1. Вывести список портов, в которые были доставлены партии кофе с ценой выше средней цены всех партий:
 SELECT Name FROM Port
     WHERE Port_ID IN (
         SELECT Port_ID
@@ -175,20 +175,19 @@ SELECT Name FROM Port
 );
 
 
---2. Посчитать общее количество килограмм кофе в каждой партии:
+-- 2. Посчитать общее количество килограмм кофе в каждой партии:
 SELECT Batch_ID, SUM(Amount_Kg) AS Total_Amount
     FROM Batch
         GROUP BY Batch_ID;
 
---3. Вывести информацию о плантации и ее управляющем для всех партий кофе:
+-- 3. Вывести информацию о плантации и ее управляющем для всех партий кофе:
 SELECT b.Batch_ID, p.Name AS Plantation_Name, m.First_Name, m.Last_Name
     FROM Batch b
         JOIN Plantation p ON b.Plantation_ID = p.Plantation_ID
         JOIN Manager m ON p.Manager_ID = m.Manager_ID;
 
 
---4. Объединить результаты двух запросов, чтобы получить список всех заказчиков
--- и плантаций, отсортированных по алфавиту:
+-- 4. Вывеси список всех заказчиков и плантаций, отсортированных по алфавиту:
 (
     SELECT Name AS Entity_Name, 'Customer' AS Entity_Type
         FROM Customer
@@ -200,33 +199,33 @@ UNION
  );
 
 
---5. Вывести информацию о заказчике, партии кофе и статусе заказа:
+-- 5. Вывести информацию о заказчике, партии кофе и статусе заказа:
 SELECT c.Name AS Customer_Name, b.Batch_ID, o.Name AS Order_Status
     FROM Coffee_Order co
         JOIN Customer c ON co.Customer_ID = c.Customer_ID
         JOIN Batch b ON co.Batch_ID = b.Batch_ID
         JOIN Order_Status o ON co.Order_Status_ID = o.Order_Status_ID;
 
---6. Вывести все партии кофе, у которых количество кофе больше 100 кг и цена за килограмм меньше 12:
+-- 6. Вывести все партии кофе, у которых количество кофе больше 100 кг и цена за килограмм меньше 12:
 SELECT * FROM Batch
     WHERE Amount_Kg > 100
     AND Total_Price / Amount_Kg < 12;
 
---7. Вывести информацию о плантациях, у которых управляющего зовут David:
+-- 7. Вывести информацию о плантациях, у которых управляющего зовут David:
 SELECT p.Name AS Plantation_Name, p.Address
     FROM Plantation p
         LEFT JOIN Manager m ON p.Manager_ID = m.Manager_ID
             WHERE m.First_Name = 'David';
 
 
---8. Вывести количество партий кофе для каждого порта:
+-- 8. Вывести количество партий кофе для каждого порта:
 SELECT p.Name AS Port_Name, COUNT(co.Batch_ID) AS Total_Batches
     FROM Port p
         LEFT JOIN Coffee_Order co ON p.Port_ID = co.Port_ID
             GROUP BY p.Name;
 
 
--- 9. Вывести информацию о плантациях, где название сорта кофе:
+-- 9. Вывести информацию о плантации, на которой выращивают сорт Arabica:
 SELECT P.Name, P.Address FROM Plantation P
     JOIN Coffee_Sort C ON P.Coffee_Sort_ID = C.Coffee_Sort_ID
         WHERE C.Name = 'Arabica';
@@ -255,6 +254,9 @@ SELECT Plantation.Name, Coffee_Sort.Name, Coffee_Sort.Price_Per_Kg
         JOIN Coffee_Sort ON Plantation.Coffee_Sort_ID = Coffee_Sort.Coffee_Sort_ID
             WHERE Coffee_Sort.Price_Per_Kg > (SELECT AVG(Price_Per_Kg) FROM Coffee_Sort)
                 ORDER BY Coffee_Sort.Price_Per_Kg DESC;
+
+-- 13. Вывести информацию о сортах кофе
+SELECT * FROM Coffee_Sort;
 
 
 -- 1. Представление, показывающее информацию о клиентах и количестве их заказов
